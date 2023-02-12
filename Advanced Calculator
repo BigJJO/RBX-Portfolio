@@ -1,0 +1,116 @@
+-- Import the necessary libraries
+local GUI = require(game.ReplicatedStorage.Modules.GUI)
+
+-- Define the function that will perform the calculations
+local function calculate(expression)
+  -- Safely evaluate the expression and return the result
+  local result = load("return " .. expression)()
+  return result
+end
+
+-- Create the GUI
+local calculator = GUI.create("Frame", {
+  Name = "Calculator",
+  Size = UDim2.new(0, 300, 0, 300),
+  Position = UDim2.new(0.5, -150, 0.5, -150),
+  BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+  Parent = game.Players.LocalPlayer.PlayerGui
+})
+
+local inputLabel = GUI.create("TextLabel", {
+  Name = "InputLabel",
+  Size = UDim2.new(1, -10, 0, 30),
+  Position = UDim2.new(0, 5, 0, 5),
+  BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+  Text = "",
+  TextColor3 = Color3.fromRGB(0, 0, 0),
+  Font = Enum.Font.SourceSans,
+  TextSize = 20,
+  Parent = calculator
+})
+
+local resultLabel = GUI.create("TextLabel", {
+  Name = "ResultLabel",
+  Size = UDim2.new(1, -10, 0, 30),
+  Position = UDim2.new(0, 5, 0, 35),
+  BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+  Text = "",
+  TextColor3 = Color3.fromRGB(0, 0, 0),
+  Font = Enum.Font.SourceSans,
+  TextSize = 20,
+  Parent = calculator
+})
+
+local function addButton(text, x, y)
+  local button = GUI.create("TextButton", {
+    Name = text,
+    Size = UDim2.new(0, 30, 0, 30),
+    Position = UDim2.new(0, x, 0, y),
+    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+    Text = text,
+    TextColor3 = Color3.fromRGB(0, 0, 0),
+    Font = Enum.Font.SourceSans,
+    TextSize = 20,
+    Parent = calculator
+  })
+  
+  button.MouseButton1Click:Connect(function()
+    inputLabel.Text = inputLabel.Text .. text
+  end)
+end
+
+addButton("1", 5, 70)
+addButton("2", 35, 70)
+addButton("3", 65, 70)
+addButton("+", 95, 70)
+
+addButton("4", 5, 100)
+addButton("5", 35, 100)
+addButton("6", 65, 100)
+addButton("-", 95, 100)
+
+addButton("7", 5, 130)
+addButton("8", 35, 130)
+addButton("9", 65, 130)
+addButton("*", 95, 130)
+
+addButton("^", 5, 160)
+addButton("sqrt", 35, 160)
+addButton("0", 65, 160)
+addButton("/", 95, 160)
+
+local equalButton = GUI.create("TextButton", {
+Name = "=",
+Size = UDim2.new(0, 30, 0, 30),
+Position = UDim2.new(0, 95, 0, 190),
+BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+Text = "=",
+TextColor3 = Color3.fromRGB(0, 0, 0),
+Font = Enum.Font.SourceSans,
+TextSize = 20,
+Parent = calculator
+})
+
+equalButton.MouseButton1Click:Connect(function()
+-- Replace "sqrt" with "math.sqrt" in the input expression
+local expression = string.gsub(inputLabel.Text, "sqrt", "math.sqrt")
+local result = calculate(expression)
+resultLabel.Text = tostring(result)
+end)
+
+local clearButton = GUI.create("TextButton", {
+Name = "Clear",
+Size = UDim2.new(0, 60, 0, 30),
+Position = UDim2.new(0, 5, 0, 220),
+BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+Text = "Clear",
+TextColor3 = Color3.fromRGB(0, 0, 0),
+Font = Enum.Font.SourceSans,
+TextSize = 20,
+Parent = calculator
+})
+
+clearButton.MouseButton1Click:Connect(function()
+inputLabel.Text = ""
+resultLabel.Text = ""
+end)
